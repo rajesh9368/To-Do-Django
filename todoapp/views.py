@@ -41,7 +41,7 @@ def register(request):
   return render(request,'todoapp/register.html',{})
 def logoutView(request):
   logout(request)
-  return redirect('login')
+  return redirect('logini')
 def logini(request):
   if request.method=='POST':
     username = request.POST.get('uname')

@@ -30,9 +30,9 @@ def register(request):
       messages.error(request,'Error,username already exists. Try another username')
       return redirect('register')
     
-    if len(password)<3:
-      messages.error(request,'Password must be atleast 3 characters')
-      return redirect('register')
+    # if len(password)<3:
+    #   messages.error(request,'Password must be atleast 3 characters')
+    #   return redirect('register')
     
     new_user = User.objects.create_user(username=username,email=email,password=password)
     new_user.save()

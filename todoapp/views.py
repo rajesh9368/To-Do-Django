@@ -16,7 +16,7 @@ def home(request):
   context = {
     'todos':all_todos
   }
-  return render(request,'todoapp/todo.html',context);
+  return render(request,'todoapp/todo.html',context)
 def register(request):
   # if request.user.is_authenticated:
   #   return redirect('home-page')
@@ -37,7 +37,8 @@ def register(request):
     new_user = User.objects.create_user(username=username,email=email,password=password)
     new_user.save()
     messages.success(request,'User successfully created login now')
-    return redirect('login')
+    # return redirect('logini')
+    return render(request,'todoapp/login.html',{})
   return render(request,'todoapp/register.html',{})
 def logoutView(request):
   logout(request)

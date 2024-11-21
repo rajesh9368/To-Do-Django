@@ -1,81 +1,175 @@
-# from django.shortcuts import render,redirect
+# # from django.shortcuts import render,redirect
+# # from django.contrib.auth.models import User
+# # from django.contrib.auth import authenticate,login,logout
+# # from django.contrib import messages
+# # from .models import todo
+# # from django.contrib.auth.decorators import login_required
+# # # Create your views here.
+# # @login_required
+# # def home(request):
+# #   if request.method=='POST':
+# #     task = request.POST.get('task')
+# #     new_todo = todo(user=request.user,todo_name=task)
+# #     new_todo.save()
+    
+# #   all_todos = todo.objects.filter(user=request.user)
+# #   context = {
+# #     'todos':all_todos
+# #   }
+# #   return render(request,'todoapp/todo.html',context)
+# # def register(request):
+# #   if request.user.is_authenticated:
+# #     return redirect('home-page')
+# #   if request.method == 'POST':
+# #     username = request.POST.get('username')
+# #     email = request.POST.get('email')
+# #     password = request.POST.get('password')
+    
+# #     get_all_users_by_username = User.objects.filter(username=username)
+# #     if get_all_users_by_username:
+# #       messages.error(request,'Error,username already exists. Try another username')
+# #       return redirect('register')
+    
+# #     # if len(password)<3:
+# #     #   messages.error(request,'Password must be atleast 3 characters')
+# #     #   return redirect('register')
+    
+# #     new_user = User.objects.create_user(username=username,email=email,password=password)
+# #     new_user.save()
+# #     messages.success(request,'User successfully created login now')
+# #     # return redirect('logini')
+# #     return render(request,'todoapp/login.html',{})
+# #   return render(request,'todoapp/register.html',{})
+# # def logoutView(request):
+# #   logout(request)
+# #   return redirect('login')
+
+
+# # def logini(request):
+# #   if request.method=='POST':
+# #     username = request.POST.get('uname')
+# #     password = request.POST.get('pass')
+    
+# #     validate_user = authenticate(username=username,password=password)
+# #     if validate_user is not None:
+# #       login(request,validate_user)
+# #       return redirect('home-page')
+# #     else:
+# #       messages.error(request,"Error, wrong user details or user does not exists")
+# #       return redirect('logini')
+# #   return render(request,'todoapp/login.html',{})
+# # @login_required
+# # def DeleteTask(request,name):
+# #   get_todo = todo.objects.get(user=request.user, todo_name=name)
+# #   get_todo.delete()
+# #   return redirect('home-page')
+# # @login_required
+# # def Update(request,name):
+# #   get_todo = todo.objects.get(user=request.user, todo_name=name)
+# #   get_todo.status = True
+# #   get_todo.save()
+# from django.shortcuts import render, redirect
 # from django.contrib.auth.models import User
-# from django.contrib.auth import authenticate,login,logout
+# from django.contrib.auth import authenticate, login, logout
 # from django.contrib import messages
 # from .models import todo
 # from django.contrib.auth.decorators import login_required
-# # Create your views here.
+
+# # Home view (requires user to be logged in)
 # @login_required
 # def home(request):
-#   if request.method=='POST':
-#     task = request.POST.get('task')
-#     new_todo = todo(user=request.user,todo_name=task)
-#     new_todo.save()
-    
-#   all_todos = todo.objects.filter(user=request.user)
-#   context = {
-#     'todos':all_todos
-#   }
-#   return render(request,'todoapp/todo.html',context)
+#     if request.method == 'POST':
+#         task = request.POST.get('task')
+#         new_todo = todo(user=request.user, todo_name=task)
+#         new_todo.save()
+
+#     all_todos = todo.objects.filter(user=request.user)
+#     context = {
+#         'todos': all_todos
+#     }
+#     return render(request, 'todoapp/todo.html', context)
+
+# # Register view
 # def register(request):
-#   if request.user.is_authenticated:
-#     return redirect('home-page')
-#   if request.method == 'POST':
-#     username = request.POST.get('username')
-#     email = request.POST.get('email')
-#     password = request.POST.get('password')
-    
-#     get_all_users_by_username = User.objects.filter(username=username)
-#     if get_all_users_by_username:
-#       messages.error(request,'Error,username already exists. Try another username')
-#       return redirect('register')
-    
-#     # if len(password)<3:
-#     #   messages.error(request,'Password must be atleast 3 characters')
-#     #   return redirect('register')
-    
-#     new_user = User.objects.create_user(username=username,email=email,password=password)
-#     new_user.save()
-#     messages.success(request,'User successfully created login now')
-#     # return redirect('logini')
-#     return render(request,'todoapp/login.html',{})
-#   return render(request,'todoapp/register.html',{})
-# def logoutView(request):
-#   logout(request)
-#   return redirect('login')
+#     if request.user.is_authenticated:
+#         return redirect('home-page')
 
+#     if request.method == 'POST':
+#         # Getting form data
+#         username = request.POST.get('username')
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
 
+#         # Validate that username is provided
+#         if not username:
+#             messages.error(request, 'Username is required')
+#             return redirect('register')
+
+#         # Validate that password is provided and meets length requirement
+#         if not password or len(password) < 3:
+#             messages.error(request, 'Password must be at least 3 characters')
+#             return redirect('register')
+
+#         # Check if the username already exists
+#         if User.objects.filter(username=username).exists():
+#             messages.error(request, 'Username already exists. Try another username.')
+#             return redirect('register')
+
+#         # Create new user
+#         try:
+#             new_user = User.objects.create_user(username=username, email=email, password=password)
+#             new_user.save()
+#             messages.success(request, 'User successfully created, login now')
+#             return render(request, 'todoapp/login.html')
+#         except Exception as e:
+#             messages.error(request, f'Error creating user: {e}')
+#             return redirect('register')
+
+#     return render(request, 'todoapp/register.html')
+
+# # Login view
 # def logini(request):
-#   if request.method=='POST':
-#     username = request.POST.get('uname')
-#     password = request.POST.get('pass')
-    
-#     validate_user = authenticate(username=username,password=password)
-#     if validate_user is not None:
-#       login(request,validate_user)
-#       return redirect('home-page')
-#     else:
-#       messages.error(request,"Error, wrong user details or user does not exists")
-#       return redirect('logini')
-#   return render(request,'todoapp/login.html',{})
+#     if request.method == 'POST':
+#         username = request.POST.get('uname')
+#         password = request.POST.get('pass')
+
+#         validate_user = authenticate(username=username, password=password)
+#         if validate_user is not None:
+#             login(request, validate_user)
+#             return redirect('home-page')
+#         else:
+#             messages.error(request, "Error, wrong user details or user does not exist")
+#             return redirect('logini')
+
+#     return render(request, 'todoapp/login.html')
+
+# # Logout view
+# def logoutView(request):
+#     logout(request)
+#     return redirect('login')
+
+# # Delete task view
 # @login_required
-# def DeleteTask(request,name):
-#   get_todo = todo.objects.get(user=request.user, todo_name=name)
-#   get_todo.delete()
-#   return redirect('home-page')
+# def DeleteTask(request, name):
+#     get_todo = todo.objects.get(user=request.user, todo_name=name)
+#     get_todo.delete()
+#     return redirect('home-page')
+
+# # Update task view
 # @login_required
-# def Update(request,name):
-#   get_todo = todo.objects.get(user=request.user, todo_name=name)
-#   get_todo.status = True
-#   get_todo.save()
-from django.shortcuts import render, redirect
+# def Update(request, name):
+#     get_todo = todo.objects.get(user=request.user, todo_name=name)
+#     get_todo.status = True
+#     get_todo.save()
+#     return redirect('home-page')
+  from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import todo
 from django.contrib.auth.decorators import login_required
+# Create your views here.
 
-# Home view (requires user to be logged in)
 @login_required
 def home(request):
     if request.method == 'POST':
@@ -89,46 +183,37 @@ def home(request):
     }
     return render(request, 'todoapp/todo.html', context)
 
-# Register view
 def register(request):
     if request.user.is_authenticated:
         return redirect('home-page')
-
     if request.method == 'POST':
-        # Getting form data
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        # Validate that username is provided
-        if not username:
-            messages.error(request, 'Username is required')
-            return redirect('register')
-
-        # Validate that password is provided and meets length requirement
-        if not password or len(password) < 3:
+        if len(password) < 3:
             messages.error(request, 'Password must be at least 3 characters')
             return redirect('register')
 
-        # Check if the username already exists
-        if User.objects.filter(username=username).exists():
-            messages.error(request, 'Username already exists. Try another username.')
+        get_all_users_by_username = User.objects.filter(username=username)
+        if get_all_users_by_username:
+            messages.error(request, 'Error, username already exists, User another.')
             return redirect('register')
 
-        # Create new user
-        try:
-            new_user = User.objects.create_user(username=username, email=email, password=password)
-            new_user.save()
-            messages.success(request, 'User successfully created, login now')
-            return render(request, 'todoapp/login.html')
-        except Exception as e:
-            messages.error(request, f'Error creating user: {e}')
-            return redirect('register')
+        new_user = User.objects.create_user(username=username, email=email, password=password)
+        new_user.save()
 
-    return render(request, 'todoapp/register.html')
+        messages.success(request, 'User successfully created, login now')
+        return redirect('login')
+    return render(request, 'todoapp/register.html', {})
 
-# Login view
-def logini(request):
+def LogoutView(request):
+    logout(request)
+    return redirect('login')
+
+def loginpage(request):
+    if request.user.is_authenticated:
+        return redirect('home-page')
     if request.method == 'POST':
         username = request.POST.get('uname')
         password = request.POST.get('pass')
@@ -138,28 +223,21 @@ def logini(request):
             login(request, validate_user)
             return redirect('home-page')
         else:
-            messages.error(request, "Error, wrong user details or user does not exist")
-            return redirect('logini')
+            messages.error(request, 'Error, wrong user details or user does not exist')
+            return redirect('login')
 
-    return render(request, 'todoapp/login.html')
 
-# Logout view
-def logoutView(request):
-    logout(request)
-    return redirect('login')
+    return render(request, 'todoapp/login.html', {})
 
-# Delete task view
 @login_required
 def DeleteTask(request, name):
     get_todo = todo.objects.get(user=request.user, todo_name=name)
     get_todo.delete()
     return redirect('home-page')
 
-# Update task view
 @login_required
 def Update(request, name):
     get_todo = todo.objects.get(user=request.user, todo_name=name)
     get_todo.status = True
     get_todo.save()
     return redirect('home-page')
-  
